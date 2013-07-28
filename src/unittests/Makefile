@@ -31,36 +31,26 @@
 CC=gcc
 ar=ar
 
-HDRS = microforth.h config.h
+HDRS = 
 
-OBJS = forth.o
+OBJS = unittests.o
 
 CFLAGS = -std=c99 -Wall -g
 
 LDFLAGS = 
 
-default: microforth
+default: build
 
-microforth: libmicroforth.a main.o
-	${CC} ${LDFLAGS} *.o ./libmicroforth.a -o microforth
+build : clean unittests
 
-
-libmicroforth.a: ${OBJS}
-	ar crs libmicroforth.a *.o
-
+unittests: ${OBJS}
+	${CC} ${LDFLAGS} *.o -o unittests ../libmicroforth.a
 
 .c.o: ${HDRS}
 	${CC} ${CFLAGS} -c $*.c
 
 clean:
-	rm -f *.o ${OBJS} *.out *.hex *.core a.out errs core *.a microforth
-	cd unittests && make clean
-
-build-test: libmicroforth.a
-	cd unittests && make build
+	rm -f *.o ${OBJS} *.out *.hex *.core a.out errs core *.a unittests
 
 test: build-test
-	./unittests/unittests
-
-#for when you're screaming "WAT" because your code isn't actually recompiling
-test-wat: clean default build-test test
+	./unittests
