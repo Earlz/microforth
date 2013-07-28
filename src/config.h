@@ -1,0 +1,7 @@
+#ifndef MICROFORTH_CONFIG_H
+#define MICROFORTH_CONFIG_H
+
+
+
+
+#endif
