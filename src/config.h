@@ -1,7 +1,11 @@
 #ifndef MICROFORTH_CONFIG_H
 #define MICROFORTH_CONFIG_H
 
+#define INITIAL_STACK_SIZE 512
 
+//#define ALLOW_STACK_RESIZE
+
+//#define STACK_STEP 512
 
 
 #endif
