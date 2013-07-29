@@ -33,7 +33,7 @@ ar=ar
 
 HDRS = microforth.h config.h
 
-OBJS = forth.o
+OBJS = forth.o utils.o
 
 CFLAGS = -std=c99 -Wall -g
 
