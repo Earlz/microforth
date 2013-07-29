@@ -5,17 +5,12 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+#define IS_WHITESPACE(c) (c==' ' || c=='\t' || c=='\r' || c=='\n')
+#define IS_NUMBER(c) ((c>='0' && c<='9') || c=='-')
 
-typedef struct{
-  intptr_t* stack; //make sure the stack can store pointers
-  size_t stackpos;
-  size_t stacklen;
-  
-  int error;
-  const char* error_msg;
-} mf_state_t;
+struct mf_state;
 
-typedef void (*mf_word_func_t)(mf_state_t* state);
+typedef void (*mf_word_func_t)(struct mf_state* state);
 
 typedef struct{
   char* name;
@@ -28,12 +23,22 @@ typedef struct mf_word_entry{
   struct mf_word_entry* next;
 } mf_word_entry_t;
 
+typedef struct mf_state{
+  intptr_t* stack; //make sure the stack can store pointers
+  size_t stackpos;
+  size_t stacklen;
+  
+  int error;
+  const char* error_msg;
+  mf_word_entry_t* words;
+} mf_state_t;
+
 void mf_push(mf_state_t* state, intptr_t value);
 intptr_t mf_pop(mf_state_t* state);
 int mf_init(mf_state_t* state, int stacksize);
 int mf_destroy(mf_state_t* state);
 
-int mf_parse_word(mf_state_t* state, const char* word);
+const char* mf_execute_word(mf_state_t* state, const char* word);
 int mf_execute(mf_state_t* state, const  char* text);
 
 
