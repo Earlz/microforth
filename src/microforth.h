@@ -31,6 +31,7 @@ typedef struct mf_word_entry{
 void mf_push(mf_state_t* state, intptr_t value);
 intptr_t mf_pop(mf_state_t* state);
 int mf_init(mf_state_t* state, int stacksize);
+int mf_destroy(mf_state_t* state);
 
 int mf_parse_word(mf_state_t* state, const char* word);
 int mf_execute(mf_state_t* state, const  char* text);
