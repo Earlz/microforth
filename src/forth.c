@@ -35,3 +35,12 @@ int mf_init(mf_state_t* state, int stacksize)
   state->error=0;
   state->error_msg=NULL;
 }
+
+int mf_destroy(mf_state_t* state)
+{
+  if(state->stack!=NULL)
+  {
+    free(state->stack);
+  }
+  return 0;
+}

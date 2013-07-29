@@ -1,6 +1,3 @@
-
-
-
 /**
 <Copyright Header>
 Copyright (c) 2013 Jordan "Earlz" Earls  <http://Earlz.net>
@@ -39,16 +36,45 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "../microforth.h"
 
 
+#define assert mu_check
 
-MU_TEST(testt)
+MU_TEST(test_push_pop_works)
 {
-  mu_check(1==1);
+  mf_state_t mf;
+  mf_init(&mf, 100);
+  mf_push(&mf, 0x1234);
+  assert(mf_pop(&mf) == 0x1234);
+  
+  mf_push(&mf, 0x4567);
+  mf_push(&mf, 0xabcd);
+  mf_push(&mf, 0xff23);
+  assert(mf_pop(&mf)==0xff23);
+  assert(mf_pop(&mf)==0xabcd);
+  assert(mf_pop(&mf)==0x4567);
+  mf_destroy(&mf);
+}
+
+MU_TEST(test_push_pop_proper_errors)
+{
+  mf_state_t mf;
+  mf_init(&mf, 100);
+  mf.stacklen=1;
+  mf_push(&mf, 1);
+  assert(mf.error==0);
+  mf_push(&mf, 1);
+  assert(mf.error!=0 && mf.error_msg!=NULL);
+  mf.error=0;
+  mf_pop(&mf);
+  assert(mf.error==0);
+  mf_pop(&mf);
+  assert(mf.error!=0);
+  mf_destroy(&mf);
 }
 
 
 MU_TEST_SUITE(test_suite) {
-    MU_RUN_TEST(testt);
-    
+    MU_RUN_TEST(test_push_pop_works);
+    MU_RUN_TEST(test_push_pop_proper_errors);
 }
 
 
