@@ -76,8 +76,41 @@ int mf_execute(mf_state_t* state, const  char* text)
   return 0;
 }
 
+//returns end of word in text if found. Else returns NULL
+const char* cmpword(const char* word, const char* text)
+{
+  int i=0;
+  for(i=0;i<strlen(word);i++)
+  {
+    if(word[i]!=text[i])
+    {
+      return NULL;
+    }
+  }
+  char c=text[i+1];
+  if(isspace(c) || c==0)
+  {
+    return &text[i+1];
+  }
+  return NULL;
+}
 
-
+mf_word_t* getword(mf_word_entry_t* list, const char* text, char** endword)
+{
+  //TODO: come back to here for performance improvements.
+  //for now just doing this naively. with O(x*y) (x is word length, y is number of words in list
+  while(list!=NULL)
+  {
+    char* end=cmpword(list->word.name, text);
+    if(end!=NULL)
+    {
+      *endword=end;
+      return &list->word;
+    }
+    list=list->next;
+  }
+  return NULL;
+}
 
 const char* mf_execute_word(mf_state_t* state, const char* word)
 {
@@ -94,6 +127,17 @@ const char* mf_execute_word(mf_state_t* state, const char* word)
     return end;
   }
   //not a number. Must be an actual word!
+  mf_word_t* item=getword(state->words, word, &end);
+  if(item==NULL)
+  {
+    state->error=1;
+    state->error_msg="Unknown word";
+    return word;
+  }
+  if(item->internal_func!=NULL)
+  {
+    return item->internal_func(state, end);
+  }
   
   
   return end;

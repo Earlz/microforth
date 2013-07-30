@@ -10,11 +10,17 @@
 
 struct mf_state;
 
-typedef void (*mf_word_func_t)(struct mf_state* state);
+/**
+ * call back for internal words in Forth
+ * @state The state of Forth
+ * @context The context surrounding this word. This starts at the character immediately following the word. 
+ * @returns The ending of the word for the interpreter (should not be NULL even for errors)
+ */
+typedef const char* (*mf_word_func_t)(struct mf_state* state, const char* context);
 
 typedef struct{
-  char* name;
-  char* body;
+  const char* name;
+  const char* body;
   mf_word_func_t internal_func;
 } mf_word_t;
 
